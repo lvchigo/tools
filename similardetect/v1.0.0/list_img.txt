@@ -1,0 +1,6 @@
+/home/chigo/working/similardetect/v1.0.0/img/str/heat_4.jpg
+/home/chigo/working/similardetect/v1.0.0/img/str/heat_3.jpg
+/home/chigo/working/similardetect/v1.0.0/img/str/dog_3.jpg
+/home/chigo/working/similardetect/v1.0.0/img/str/cat_1.jpg
+/home/chigo/working/similardetect/v1.0.0/img/str/dog_2.jpg
+/home/chigo/working/similardetect/v1.0.0/img/str/cat_2.jpg

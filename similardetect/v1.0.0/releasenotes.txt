@@ -1,0 +1,68 @@
+////////////////////////////////////////////////////////////////////////
+//             SameMerge GlobalFeature Library 			              //
+////////////////////////////////////////// /////////////////////////////
+
+Introduction:
+TTS GlobalFeature Library provides to spider for SameMerge project .
+
+Publish date:
+03/29/2012
+
+Version:
+1.0.2
+
+Supported platforms:
+Linux
+
+Compile options:
+-lSD_global_X_X_X 
+
+Known issues:
+None
+
+Library dependency:
+
+File List:
+|----include
+|    |----SD_comm.h
+|    |----SD_global.h
+|    |----TErrorCode.h
+|----lib
+|    |----libSD_global_1_0_1.a						
+|----releasenotes.txt							This file
+
+Change logs:
+1.0.2
+1. reject too small image (width or height is less than 16)
+
+1.0.1
+1.remove version info in Init function.
+2.change backup method, feature values will be backuped in one file during 12 hours.
+3.function Init will return error when SDdat file exists error.
+
+1.0.0
+1. First linux version.
+
+Highlights:
+None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
