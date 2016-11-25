@@ -18,7 +18,9 @@
 #include "TErrorCode.h"
 #include "SD_global.h"
 
+using namespace cv;
 using namespace std;
+
 
 #define _TIME_STATISTICS_
 #define THREAD_NUM    8
@@ -96,6 +98,33 @@ void getRandomID( unsigned long long &randomID )
 		randomID = randomID * 10 + atom;
 	}
 }
+
+IplImage* ResizeImg( IplImage *img, float &ratio, int MaxLen )
+{
+	int rWidth, rHeight, nRet = 0;
+	ratio = 1.0;
+
+	//Resize
+	if (img->width > img->height) {
+		if (img->width > MaxLen)
+			ratio = MaxLen*1.0 / img->width;
+	} 
+	else 
+	{	
+		if (img->height > MaxLen)
+			ratio = MaxLen*1.0 / img->height;
+	}
+	rWidth =  (int )img->width * ratio;
+	rWidth = (((rWidth + 3) >> 2) << 2);	//width 4 char
+	rHeight = (int )img->height * ratio;
+	rHeight = (((rHeight + 3) >> 2) << 2);	//rHeight 4 char
+
+	IplImage *imgResize = cvCreateImage(cvSize(rWidth, rHeight), img->depth, img->nChannels);
+	cvResize( img, imgResize );
+
+	return imgResize;
+}
+
 
 int SimilarDetectSingle(char *szFileList, char *szKeyFiles, int ClassID, int subClassID, int BinSaveFeat)
 {
@@ -481,6 +510,7 @@ void* ThreadFunc2(void* para)
 	int  ret = 0;
 	unsigned long long ImageID;
 	long idx;
+	float ratio = 0.0;
 	char szSaveImgPath[512];
 	SD_RES result;
 	ThreadParam2 *pParam = (ThreadParam2*)para;
@@ -526,13 +556,27 @@ void* ThreadFunc2(void* para)
 				sprintf (szSaveImgPath, "%s/%s_%ld.jpg",pParam->szSavePath.c_str(),pParam->szSaveName.c_str(),ImageID);
 				IplImage *ImageMedia = cvCreateImage(cvSize(256, 256), img->depth, img->nChannels);
 				cvResize(img, ImageMedia);
+				
+				IplImage* imgResize = ResizeImg( img, ratio, 512 );	//320,512
+				if(!imgResize || imgResize->nChannels != 3 || imgResize->depth != IPL_DEPTH_8U) 
+				{	
+					printf("Fail to ResizeImg!!\n");
+					cvReleaseImage(&ImageMedia);ImageMedia = 0;
+					cvReleaseImage(&imgResize);imgResize = 0;
+					continue;
+				}
+			
 				pthread_mutex_lock(&s_mutex);//对公用文件进行操作，需加锁
-				if ( pParam->BinReSizeImg == 1 )
+				if ( pParam->BinReSizeImg == 2 ) //resize to 512
+					cvSaveImage(szSaveImgPath,imgResize);
+				else if( pParam->BinReSizeImg == 1 ) //resize to 256*256
 					cvSaveImage(szSaveImgPath,ImageMedia);
 				else
-					cvSaveImage(szSaveImgPath,img);
+					cvSaveImage(szSaveImgPath,img);	//no resize
 				pthread_mutex_unlock(&s_mutex);//解锁
-				cvReleaseImage(&ImageMedia);
+				
+				cvReleaseImage(&ImageMedia);ImageMedia = 0;
+				cvReleaseImage(&imgResize);imgResize = 0;
 			}
 		}
 		else if (ret == TEC_UNSUPPORTED)
@@ -540,8 +584,7 @@ void* ThreadFunc2(void* para)
 			cout<< s_vecFile[idx].c_str() << " is unsupported image format!! "<< endl;
 			continue;
 		}
-		cvReleaseImage(&img);
-		img = 0;
+		cvReleaseImage(&img);img = 0;
 	}
 
 ERR:

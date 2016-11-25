@@ -6,12 +6,10 @@ OBJ = ../obj
 LIB = ../lib
 BIN = ../bin
 
-LIB_FLAG = -L../lib -L/usr/lib64 -L/usr/local/lib64 -L/usr/local/lib
-#INCLUDE = -I. -I../include -I/usr/include -I/usr/sys/include -I/usr/local/include/opencv2.1
-#MY_LIB = -lpthread -lcv -lcvaux -lhighgui -lml -lcxcore -lm 
-
 INCLUDE = -I. -I../include -I/usr/include -I/usr/sys/include -I/usr/local/include/opencv -I/usr/local/include/opencv2 -I/usr/local/include
-MY_LIB = -lpthread -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_ml
+LIB_FLAG = -L../lib -L/usr/lib64 -L/usr/local/lib64 -L/usr/local/lib -L/usr/lib
+
+MY_LIB = -lpthread -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_ml -lopencv_imgcodecs
 
 #LibObjs = $(patsubst $(SRC)/%.cpp, $(OBJ)/%.o, $(wildcard $(SRC)/*.cpp))
 LibObjs = 	$(OBJ)/ColorLayout.o \

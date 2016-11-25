@@ -1,9 +1,9 @@
 #Path
-path_src='/home/chigo/working/research/similardetect/v1.0.0/bin/img/'
+path_src='/home/chigo/image/test/'
 path_save='/home/chigo/working/research/similardetect/v1.0.0/bin/sv/'
 
 #Label
-a=(str)
+a=(street_img)
 
 #detect similar img
 rm -rf keyfile
@@ -24,7 +24,8 @@ for((i=0;i<1;i++))
   mkdir $path_save/$b/
 
   #Demo -simdetectmuti ImageList.txt keyFilePath savePath saveName nThreads BinSaveFeat BinReSizeImg BinUseName
-  ./Demo -simdetectmuti list_$b.txt keyfile/ $path_save/$b/ $b.160110 4 1 0 0
+  #BinReSizeImg:2-resize to 512,1-resize to 256*256,0-no resize
+  ./Demo -simdetectmuti list_$b.txt keyfile/ $path_save/$b/ $b.161125 4 1 2 0
 
   #rm -rf keyfile
 done
